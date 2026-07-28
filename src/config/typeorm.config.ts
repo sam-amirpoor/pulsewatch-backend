@@ -18,8 +18,7 @@ export const typeOrmConfig: TypeOrmModuleAsyncOptions = {
 
     autoLoadEntities: true,
 
-    synchronize: process.env.NODE_ENV !== 'production',
-
-    logging: process.env.NODE_ENV === 'development',
+    synchronize: config.get<string>('app.nodeEnv') !== 'production',
+    logging: config.get<string>('app.nodeEnv') === 'development',
   }),
 };
