@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './modules/users/users.module';
 import { MonitoringService } from './modules/monitoring/monitoring.service';
 import { MonitoringController } from './modules/monitoring/monitoring.controller';
@@ -10,6 +10,8 @@ import appConfig from './config/app.config';
 import databaseConfig from './config/database.config';
 import jwtConfig from './config/jwt.config';
 import { validateEnv } from './config/env.validation';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { typeOrmConfig } from './config/typeorm.config';
 
 @Module({
   imports: [
@@ -17,6 +19,10 @@ import { validateEnv } from './config/env.validation';
       isGlobal: true,
       load: [appConfig, databaseConfig, jwtConfig],
       validate: validateEnv,
+    }),
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: typeOrmConfig,
     }),
     UsersModule,
     MonitoringModule,
