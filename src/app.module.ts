@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './modules/users/users.module';
 import { WebsitesModule } from './modules/websites/websites.module';
 import { AuthModule } from './modules/auth/auth.module';
@@ -18,10 +18,7 @@ import { typeOrmConfig } from './config/typeorm.config';
       load: [appConfig, databaseConfig, jwtConfig],
       validate: validateEnv,
     }),
-    TypeOrmModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: typeOrmConfig,
-    }),
+    TypeOrmModule.forRootAsync(typeOrmConfig),
     UsersModule,
     MonitoringModule,
     AuthModule,
