@@ -4,10 +4,12 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
+import { MonitoringResult } from '../../monitoring/entities/monitoring-result.entity';
 
 @Entity({ name: 'websites' })
 export class Website {
@@ -64,4 +66,10 @@ export class Website {
     name: 'updated_at',
   })
   updatedAt!: Date;
+
+  @OneToMany(
+    () => MonitoringResult,
+    (monitoringResult) => monitoringResult.website,
+  )
+  monitoringResults!: MonitoringResult[];
 }
