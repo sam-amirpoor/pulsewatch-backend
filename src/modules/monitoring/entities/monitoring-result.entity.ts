@@ -9,7 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'monitoring_results' })
 export class MonitoringResult {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
