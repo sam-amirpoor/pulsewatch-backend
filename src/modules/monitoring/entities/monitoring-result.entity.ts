@@ -18,12 +18,10 @@ export class MonitoringResult {
     nullable: false,
     onDelete: 'CASCADE',
   })
-  website!: Website;
-
   @JoinColumn({
     name: 'website_id',
   })
-  websiteId!: Website;
+  website!: Website;
 
   @Column({
     name: 'status_code',
@@ -42,6 +40,7 @@ export class MonitoringResult {
 
   @Column({
     name: 'error_message',
+    type: 'text',
     nullable: true,
   })
   errorMessage!: string | null;
