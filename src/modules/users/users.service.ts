@@ -11,16 +11,24 @@ export class UsersService {
     private readonly usersRepository: Repository<User>,
   ) {}
 
-  findOne(options: { id?: string; email?: string }) {
+  async findOne(options: { id?: string; email?: string }): Promise<User> {
+    let user: User | null = null;
+
     if (options.id) {
-      return this.usersRepository.findOneBy({ id: options.id });
+      user = await this.usersRepository.findOneBy({
+        id: options.id,
+      });
+    } else if (options.email) {
+      user = await this.usersRepository.findOneBy({
+        email: options.email,
+      });
     }
 
-    if (options.email) {
-      return this.usersRepository.findOneBy({ email: options.email });
+    if (!user) {
+      throw new NotFoundException('User not found');
     }
 
-    return null;
+    return user;
   }
 
   async create(email: string, password: string) {
@@ -44,10 +52,6 @@ export class UsersService {
   async update(id: string, email?: string, password?: string) {
     const user = await this.findOne({ id });
 
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
     if (email !== undefined) {
       user.email = email;
     }
@@ -67,6 +71,8 @@ export class UsersService {
   }
 
   async remove(id: string) {
-    await this.usersRepository.delete({ id });
+    const user = await this.findOne({ id });
+
+    await this.usersRepository.remove(user);
   }
 }
