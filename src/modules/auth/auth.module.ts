@@ -5,6 +5,8 @@ import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import type { StringValue } from 'ms';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { RefreshToken } from './entities/refresh-token.entity';
 
 @Module({
   controllers: [AuthController],
@@ -20,6 +22,7 @@ import type { StringValue } from 'ms';
         },
       }),
     }),
+    TypeOrmModule.forFeature([RefreshToken]),
   ],
 })
 export class AuthModule {}
