@@ -1,7 +1,16 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Headers,
+  HttpCode,
+  HttpStatus,
+  Post,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { RegisterDto } from './dto/register.dto';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
+import { RefreshAccessTokenDto } from './dto/refresh-access-token.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -12,7 +21,26 @@ export class AuthController {
   }
 
   @Post('login')
+  @HttpCode(HttpStatus.OK)
   login(@Body() { email, password }: LoginDto) {
     return this.authService.login(email, password);
+  }
+
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  refreshAccessToken(@Body() { refreshToken }: RefreshAccessTokenDto) {
+    return this.authService.refresh(refreshToken);
+  }
+
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  logout(@Headers('authorization') authorization?: string) {
+    const [type, refreshToken] = authorization?.split(' ') ?? [];
+
+    if (type !== 'Bearer' || !refreshToken) {
+      throw new UnauthorizedException('Invalid authorization header');
+    }
+
+    return this.authService.logout(refreshToken);
   }
 }
