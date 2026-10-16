@@ -72,4 +72,19 @@ export class UsersService {
 
     await this.usersRepository.remove(user);
   }
+
+  async getCurrentUser(userId: string) {
+    const user = await this.findOne({
+      id: userId,
+    });
+
+    return {
+      data: {
+        id: user.id,
+        email: user.email,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      },
+    };
+  }
 }
